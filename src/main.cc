@@ -7,12 +7,44 @@ float t = 0;
 
 void renderPrimitive(void)
 {
-  glColor3f(0.0f, 0.0f, 1.0f);
   glBegin(GL_QUADS);
-  glVertex3f(-1.0f, -1.0f, 0.0f);
-  glVertex3f(-1.0f,  1.0f, 0.0f);
-  glVertex3f( 1.0f,  1.0f, 0.0f);
-  glVertex3f( 1.0f, -1.0f, 0.0f);
+
+  glColor4f(0.0f, 0.0f, 1.0f, 0.0f);
+  glVertex3i(1,1,1);
+  glVertex3i(1,-1,1);
+  glVertex3i(-1,-1,1);
+  glVertex3i(-1,1,1);
+
+  glColor3f(1.0f, 0.0f, 1.0f);
+  glVertex3i(1,1,-1);
+  glVertex3i(1,-1,-1);
+  glVertex3i(-1,-1,-1);
+  glVertex3i(-1,1,-1);
+
+  glColor3f(1.0f, 0.0f, 0.0f);
+  glVertex3i(1,1,1);
+  glVertex3i(1,-1,1);
+  glVertex3i(1,-1,-1);
+  glVertex3i(1,1,-1);
+
+  glColor3f(0.0f, 1.0f, 0.0f);
+  glVertex3i(-1,1,1);
+  glVertex3i(-1,-1,1);
+  glVertex3i(-1,-1,-1);
+  glVertex3i(-1,1,-1);
+
+  glColor3f(0.0f, 1.0f, 1.0f);
+  glVertex3i(-1,1,-1);
+  glVertex3i(-1,1,1);
+  glVertex3i(1,1,1);
+  glVertex3i(1,1,-1);
+
+  glColor3f(1.0f, 1.0f, 1.0f);
+  glVertex3i(-1,-1,-1);
+  glVertex3i(-1,-1,1);
+  glVertex3i(1,-1,1);
+  glVertex3i(1,-1,-1);
+
   glEnd();
 }
 
@@ -23,8 +55,10 @@ void display(void)
   glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT);
   glLoadIdentity();
-  glTranslatef(0.0f, 0.0f, -10.0f - t);
-  t += 0.001;
+  glTranslatef(0.0f, 0.0f, -10.0f);
+  glRotatef(1.5 * t, 0.0f, 1.0f, 0.0f);
+  glRotatef(t, 1.0f, 0.0f, 0.0f);
+  t += 0.05;
 
   /* Drawing */
   renderPrimitive();
@@ -47,6 +81,12 @@ void reshape(int width, int height)
   glMatrixMode(GL_MODELVIEW);
 }
 
+void initGL()
+{
+  glEnable(GL_DEPTH_TEST);
+  glEnable(GL_COLOR_MATERIAL);
+}
+
 void keyUp (unsigned char key, int x, int y)
 {
   keyStates[key] = false;
@@ -65,7 +105,7 @@ int main(int argc, char **argv)
 {
   /* Creating a window */
   glutInit(&argc, argv);
-  glutInitDisplayMode(GLUT_SINGLE);
+  glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA | GLUT_DEPTH);
   glutInitWindowSize(500, 500);
   glutInitWindowPosition(100, 100);
   glutCreateWindow("Glew test");
@@ -75,6 +115,7 @@ int main(int argc, char **argv)
   glutReshapeFunc(reshape);
   glutKeyboardFunc(keyPressed);
   glutKeyboardUpFunc(keyUp);
+  initGL();
 
   /* Checking for errors */
   GLenum err = glewInit();
