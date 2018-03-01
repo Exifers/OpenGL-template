@@ -3,62 +3,34 @@
 #include <GL/glut.h>
 
 bool *keyStates = new  bool[256];
-float t = 0;
+float pos_x = 0;
+float pos_y = 0;
+float pos_z = 0;
+float theta = 0;
+float phi = 0;
 
 void renderPrimitive(void)
 {
-  glBegin(GL_QUADS);
-
-  glColor4f(0.0f, 0.0f, 1.0f, 0.0f);
-  glVertex3i(1,1,1);
-  glVertex3i(1,-1,1);
-  glVertex3i(-1,-1,1);
-  glVertex3i(-1,1,1);
-
-  glColor3f(1.0f, 0.0f, 1.0f);
-  glVertex3i(1,1,-1);
-  glVertex3i(1,-1,-1);
-  glVertex3i(-1,-1,-1);
-  glVertex3i(-1,1,-1);
-
-  glColor3f(1.0f, 0.0f, 0.0f);
-  glVertex3i(1,1,1);
-  glVertex3i(1,-1,1);
-  glVertex3i(1,-1,-1);
-  glVertex3i(1,1,-1);
-
-  glColor3f(0.0f, 1.0f, 0.0f);
-  glVertex3i(-1,1,1);
-  glVertex3i(-1,-1,1);
-  glVertex3i(-1,-1,-1);
-  glVertex3i(-1,1,-1);
-
-  glColor3f(0.0f, 1.0f, 1.0f);
-  glVertex3i(-1,1,-1);
-  glVertex3i(-1,1,1);
-  glVertex3i(1,1,1);
-  glVertex3i(1,1,-1);
-
-  glColor3f(1.0f, 1.0f, 1.0f);
-  glVertex3i(-1,-1,-1);
-  glVertex3i(-1,-1,1);
-  glVertex3i(1,-1,1);
-  glVertex3i(1,-1,-1);
-
-  glEnd();
+  glutSolidSphere(1, 5, 5);
 }
 
 void display(void)
 {
+  int matSpec[] = {1, 1, 1, 1};
+  glMaterialiv(GL_FRONT_AND_BACK, GL_SPECULAR, matSpec);
+  glMateriali(GL_FRONT_AND_BACK, GL_SHININESS, 100);
+
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
   glMatrixMode(GL_MODELVIEW);
-  glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
-  glClear(GL_COLOR_BUFFER_BIT);
   glLoadIdentity();
-  glTranslatef(0.0f, 0.0f, -10.0f);
-  glRotatef(1.5 * t, 0.0f, 1.0f, 0.0f);
-  glRotatef(t, 1.0f, 0.0f, 0.0f);
-  t += 0.05;
+
+  glRotatef(theta, 0, 0, 1);
+  glRotatef(phi, 0, 1, 0);
+  glTranslatef(pos_x, pos_y, -10 + pos_z);
+
+  int lightPos[] = {0, -3, -3, 1};
+  glLightiv(GL_LIGHT0, GL_POSITION, lightPos);
 
   /* Drawing */
   renderPrimitive();
@@ -85,6 +57,8 @@ void initGL()
 {
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_COLOR_MATERIAL);
+  glEnable(GL_LIGHTING);
+  glEnable(GL_LIGHT0);
 }
 
 void keyUp (unsigned char key, int x, int y)
@@ -99,6 +73,39 @@ void keyPressed(unsigned char key, int x, int y)
   keyStates[key] = true;
   x = x;
   y = y;
+  switch( (int) key)
+  {
+    case 'z':
+      pos_y += 0.1;
+      break;
+    case 's':
+      pos_y -= 0.1;
+      break;
+    case 'd':
+      pos_x += 0.1;
+      break;
+    case 'q':
+      pos_x -= 0.1;
+      break;
+    case 'a':
+      pos_z += 0.1;
+      break;
+    case 'e':
+      pos_z -= 0.1;
+      break;
+    case 'o':
+      theta += 2;
+      break;
+    case 'p':
+      theta -= 2;
+      break;
+    case 'l':
+      phi += 2;
+      break;
+    case 'm':
+      phi -= 2;
+      break;
+  }
 }
 
 int main(int argc, char **argv)
