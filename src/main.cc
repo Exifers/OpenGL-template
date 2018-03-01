@@ -1,6 +1,7 @@
 #include <iostream>
 #include <GL/glew.h>
 #include <GL/glut.h>
+#include <X11/Xlib.h>
 
 bool *keyStates = new  bool[256];
 float pos_x = 0;
@@ -105,17 +106,25 @@ void keyPressed(unsigned char key, int x, int y)
     case 'm':
       phi -= 2;
       break;
+    case 'r':
+      std::exit(0);
+      break;
   }
 }
 
 int main(int argc, char **argv)
 {
+  Display *d = XOpenDisplay(NULL);
+  Screen *s = DefaultScreenOfDisplay(d);
+  std::cout << s->height << "," << s->width << std::endl;
+
   /* Creating a window */
   glutInit(&argc, argv);
-  glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA | GLUT_DEPTH);
-  glutInitWindowSize(500, 500);
-  glutInitWindowPosition(100, 100);
+  glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
+  glutInitWindowSize(s->width, s->height);
+  glutInitWindowPosition(0, 0);
   glutCreateWindow("Glew test");
+  glutFullScreen();
 
   /* Binding basic functions */
   glutDisplayFunc(display);

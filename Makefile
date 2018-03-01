@@ -7,4 +7,4 @@ fls = $(shell find src/ -type f -name "*.cc")
 bin = main
 
 all:
-	$(CXX) $(CXXFLAGS) $(fls) -lGL -lGLU -lglut -lGLEW -o $(bin)
+	$(CXX) $(CXXFLAGS) $(fls) -lGL -lGLU -lglut -lGLEW -lX11 -o $(bin)
