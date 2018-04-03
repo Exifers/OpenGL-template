@@ -1,17 +1,23 @@
 #pragma once
 
-#include <math/vector.hh>
+#include <list>
 
-class Dynamic
+#include <math/vector.hh>
+#include <math/matrix.hh>
+#include <keyboard/keyboard.hh>
+#include <glutInterface/glutInterface.hh>
+
+class DynamicBase
 {
   public:
-    Dynamic() = default;
-    ~Dynamic() = default;
+    DynamicBase();
+    virtual ~DynamicBase() = 0;
 
-    void update(void);
+    virtual void update();
     void apply_force(Vector force);
+    static void updateAll();
 
-    float& mass_get(void);
+    float& mass_get();
     const float& mass_get() const;
     void mass_set(float mass);
 
@@ -30,12 +36,56 @@ class Dynamic
     Vector& acc_get();
     const Vector& acc_get() const;
     void acc_set(Vector acc);
-  private:
+  protected:
     float mass_ = 1;
-    float intr_friction_ = 1;
+    float intr_friction_ = 0.9;
     Vector pos_;
     Vector vel_;
     Vector acc_;
+
+    static std::list<DynamicBase *> instances_;
+};
+
+class DynamicRotative : public DynamicBase
+{
+  public:
+    DynamicRotative() = default;
+    virtual ~DynamicRotative() = 0;
+
+    virtual void update() override;
+
+    Vector& angularPos_get();
+    const Vector& angularPos_get() const;
+
+    Vector& angularVel_get();
+    const Vector& angularVel_get() const;
+
+    Vector& intrAngularFriction_get();
+    const Vector& intrAngularFriction_get() const;
+
+    Matrix& inertia_get();
+    const Matrix& inertia_get() const;
+
+    Vector& torque_get();
+    const Vector& torque_get() const;
+
+  protected:
+    Vector angularPos_;
+    Vector angularVel_;
+    Vector intrAngularFriction_ = Vector(1, 1, 1);
+    Matrix inertia_ = Matrix::identity();
+    Vector torque_;
+};
+
+class Controllable : public KeyboardListener, public DynamicRotative
+{
+  public:
+    virtual ~Controllable() = 0;
+
+    void keyPressed(int key) override;
+    void keyReleased(int key) override;
+  protected:
+    Vector dir_;
 };
 
 #include "dynamic.hxx"

@@ -1,10 +1,24 @@
-glutlib = /home/emmanuel/Downloads/freeglut-3.0.0/lib/
+CXX := g++
+CXXFLAGS := -Wall -Wextra -pedantic -std=c++17 -I src/ -I lib/
+LDFLAGS := -lGL -lGLU -lglut -lGLEW -lX11
 
-CXX = g++
-CXXFLAGS = -Wall -Wextra -Werror -pedantic -std=c++17
+debug : CXXFLAGS += -g -Werror
+all : CXXFLAGS += -Werror
 
-fls = $(shell find src/ -type f -name "*.cc")
-bin = main
+src := $(shell find src/ lib/ -type f -name "*.cc")
+obj := $(src:%.cc=%.o)
+bin := main
 
-all:
-	$(CXX) $(CXXFLAGS) $(fls) -lGL -lGLU -lglut -lGLEW -lX11 -o $(bin)
+all: $(obj)
+	$(CXX) $(fls) $^ $(LDFLAGS) -o $(bin)
+
+warn: $(obj)
+	$(CXX) $(fls) $^ $(LDFLAGS) -o $(bin)
+
+debug: $(obj)
+	$(CXX) $(fls) $^ $(LDFLAGS) -o $(bin)
+
+clean:
+	$(RM) $(obj) $(bin)
+
+.PHONY: all debug clean

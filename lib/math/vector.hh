@@ -11,6 +11,8 @@ class Vector
 
     float dot(Vector other) const;
     Vector cross(Vector other) const;
+    Vector normalized() const;
+    float size() const;
 
     Vector operator+(Vector other) const;
     Vector operator+=(Vector other);
@@ -18,8 +20,11 @@ class Vector
     Vector operator-=(Vector other);
     Vector operator*(float k) const;
     Vector operator*=(float k);
+    Vector operator*(Vector other) const;
+    Vector operator*=(Vector other);
     Vector operator/(float k) const;
     Vector operator/=(float k);
+    float& operator[](int index);
 
     friend std::ostream& operator<<(std::ostream& os, const Vector& v);
     friend Vector operator*(float k, Vector v);

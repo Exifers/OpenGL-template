@@ -1,18 +1,19 @@
+#include <vector>
 #include <iostream>
 #include <GL/glew.h>
 #include <GL/glut.h>
+#include <thread>
 
-bool *keyStates = new  bool[256];
+#include <keyboard/keyboard.hh>
+#include <launcher/launcher.hh>
+#include <glutInterface/glutInterface.hh>
+#include <camera/camera.hh>
+
 float pos_x = 0;
 float pos_y = 0;
 float pos_z = 0;
 float theta = 0;
 float phi = 0;
-
-void renderPrimitive(void)
-{
-  glutSolidSphere(1, 5, 5);
-}
 
 void display(void)
 {
@@ -33,109 +34,21 @@ void display(void)
   glLightiv(GL_LIGHT0, GL_POSITION, lightPos);
 
   /* Drawing */
-  renderPrimitive();
+  glutSolidSphere(1, 5, 5);
   glFlush();
 
   /* Triggering motions here */
   glutSwapBuffers();
   glutPostRedisplay();
-}
 
-/** Reshape is called once at openGL launching, sets up settings about 3D
-**  rendering. */
-void reshape(int width, int height)
-{
-  /* Setting up the local frame of the viewport rectange */
-  glViewport(0, 0, (GLsizei)width, (GLsizei)height);
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-  gluPerspective(60, (GLfloat)width / (GLfloat)height, 1.0, 100.0);
-  glMatrixMode(GL_MODELVIEW);
-}
-
-void initGL()
-{
-  glEnable(GL_DEPTH_TEST);
-  glEnable(GL_COLOR_MATERIAL);
-  glEnable(GL_LIGHTING);
-  glEnable(GL_LIGHT0);
-}
-
-void keyUp (unsigned char key, int x, int y)
-{
-  keyStates[key] = false;
-  x = x;
-  y = y;
-}
-
-void keyPressed(unsigned char key, int x, int y)
-{
-  keyStates[key] = true;
-  x = x;
-  y = y;
-  switch( (int) key)
-  {
-    case 'z':
-      pos_y += 0.1;
-      break;
-    case 's':
-      pos_y -= 0.1;
-      break;
-    case 'd':
-      pos_x += 0.1;
-      break;
-    case 'q':
-      pos_x -= 0.1;
-      break;
-    case 'a':
-      pos_z += 0.1;
-      break;
-    case 'e':
-      pos_z -= 0.1;
-      break;
-    case 'o':
-      theta += 2;
-      break;
-    case 'p':
-      theta -= 2;
-      break;
-    case 'l':
-      phi += 2;
-      break;
-    case 'm':
-      phi -= 2;
-      break;
-    case 'r':
-      std::exit(0);
-      break;
-  }
+  DynamicBase::updateAll();
+  KeyboardListener::applyKeyEventsOnAll();
 }
 
 int main(int argc, char **argv)
 {
-  /* Creating a window */
-  glutInit(&argc, argv);
-  glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
-  glutCreateWindow("Araktazia");
-  glutFullScreen();
-
-  /* Binding basic functions */
-  glutDisplayFunc(display);
-  glutReshapeFunc(reshape);
-  glutKeyboardFunc(keyPressed);
-  glutKeyboardUpFunc(keyUp);
-  initGL();
-
-  /* Checking for errors */
-  GLenum err = glewInit();
-  if (GLEW_OK != err)
-  {
-    std::cerr << "glewInit failed : " << glewGetErrorString(err) << std::endl;
-  }
-  std::cout << "Glew initialized using " << glewGetString(GLEW_VERSION)
-    << std::endl;
-
-  /* Running the window */
-  glutMainLoop();
+  Camera::instance();
+  auto& launcher = Launcher::instance(argc, argv);
+  launcher.launch();
   return 0;
 }

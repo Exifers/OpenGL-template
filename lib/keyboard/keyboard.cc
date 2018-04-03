@@ -1,5 +1,3 @@
-#define N_KEY 512
-
 #include "keyboard.hh"
 
 /*--------------------

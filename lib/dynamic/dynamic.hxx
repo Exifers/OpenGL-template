@@ -1,105 +1,178 @@
+#include <stdexcept>
+
 inline
 float&
-Dynamic::mass_get(void)
+DynamicBase::mass_get(void)
 {
   return mass_;
 }
 
 inline
 const float&
-Dynamic::mass_get() const
+DynamicBase::mass_get() const
 {
   return mass_;
 }
 
 inline
 void
-Dynamic::mass_set(float mass)
+DynamicBase::mass_set(float mass)
 {
   if (mass == 0)
-    throw;
+    throw std::invalid_argument("Cannot set mass to 0");
   mass_ = mass;
 }
 
 inline
 float&
-Dynamic::intr_friction_get()
+DynamicBase::intr_friction_get()
 {
   return intr_friction_;
 }
 
 inline
 const float&
-Dynamic::intr_friction_get() const
+DynamicBase::intr_friction_get() const
 {
   return intr_friction_;
 }
 
 inline
 void
-Dynamic::intr_friction_set(float intr_friction)
+DynamicBase::intr_friction_set(float intr_friction)
 {
   intr_friction_ = intr_friction;
 }
 
 inline
 Vector&
-Dynamic::pos_get()
+DynamicBase::pos_get()
 {
   return pos_;
 }
 
 inline
 const Vector&
-Dynamic::pos_get() const
+DynamicBase::pos_get() const
 {
   return pos_;
 }
 
 inline
 void
-Dynamic::pos_set(Vector pos)
+DynamicBase::pos_set(Vector pos)
 {
   pos_ = pos;
 }
 
 inline
-Vector& Dynamic::vel_get()
+Vector& DynamicBase::vel_get()
 {
   return vel_;
 }
 
 inline
 const Vector&
-Dynamic::vel_get() const
+DynamicBase::vel_get() const
 {
   return vel_;
 }
 
 inline
 void
-Dynamic::vel_set(Vector vel)
+DynamicBase::vel_set(Vector vel)
 {
   vel_ = vel;
 }
 
 inline
 Vector&
-Dynamic::acc_get()
+DynamicBase::acc_get()
 {
   return acc_;
 }
 
 inline
 const Vector&
-Dynamic::acc_get() const
+DynamicBase::acc_get() const
 {
   return acc_;
 }
 
 inline
 void
-Dynamic::acc_set(Vector acc)
+DynamicBase::acc_set(Vector acc)
 {
   acc_ = acc;
+}
+
+inline
+Vector&
+DynamicRotative::angularPos_get()
+{
+  return angularPos_;
+}
+
+
+inline
+const Vector&
+DynamicRotative::angularPos_get() const
+{
+  return angularPos_;
+}
+
+inline
+Vector&
+DynamicRotative::angularVel_get()
+{
+  return angularVel_;
+}
+
+inline
+const Vector&
+DynamicRotative::angularVel_get() const
+{
+  return angularVel_;
+}
+
+inline
+Vector&
+DynamicRotative::intrAngularFriction_get()
+{
+  return intrAngularFriction_;
+}
+
+inline
+const Vector&
+DynamicRotative::intrAngularFriction_get() const
+{
+  return intrAngularFriction_;
+}
+
+inline
+Matrix&
+DynamicRotative::inertia_get()
+{
+  return inertia_;
+}
+
+inline
+const Matrix&
+DynamicRotative::inertia_get() const
+{
+  return inertia_;
+}
+
+inline
+Vector&
+DynamicRotative::torque_get()
+{
+  return torque_;
+}
+
+inline
+const Vector&
+DynamicRotative::torque_get() const
+{
+  return torque_;
 }

@@ -1,5 +1,7 @@
 #pragma once
 
+#define N_KEY 512
+
 #include <ostream>
 #include <vector>
 #include <list>
