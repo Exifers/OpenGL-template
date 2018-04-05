@@ -25,10 +25,13 @@
 #define KEY_HOME      N_KEY / 2 + GLUT_KEY_HOME
 #define KEY_END       N_KEY / 2 + GLUT_KEY_END
 #define KEY_INSERT    N_KEY / 2 + GLUT_KEY_INSERT
-#define KEY_SHIFT     N_KEY / 2 + GLUT_ACTIVE_SHIFT
+#define KEY_SHIFT     368
 
 
 void keyPressed(unsigned char key, int x, int y);
 void keyReleased(unsigned char key, int x, int y);
 void specialKeyPressed(int key, int x, int y);
 void specialKeyReleased(int key, int x, int y);
+void mouseEvent(int button, int state, int x, int y);
+void mouseMotion(int x, int y);
+void mousePassiveMotion(int x, int y);

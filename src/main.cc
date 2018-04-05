@@ -8,12 +8,7 @@
 #include <launcher/launcher.hh>
 #include <glutInterface/glutInterface.hh>
 #include <camera/camera.hh>
-
-float pos_x = 0;
-float pos_y = 0;
-float pos_z = 0;
-float theta = 0;
-float phi = 0;
+#include <primitive/primitive.hh>
 
 void display(void)
 {
@@ -26,28 +21,25 @@ void display(void)
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
 
-  glRotatef(theta, 0, 0, 1);
-  glRotatef(phi, 0, 1, 0);
-  glTranslatef(pos_x, pos_y, -10 + pos_z);
+  Camera::instance().moveFrame();
 
   int lightPos[] = {0, -3, -3, 1};
   glLightiv(GL_LIGHT0, GL_POSITION, lightPos);
 
-  /* Drawing */
-  glutSolidSphere(1, 5, 5);
-  glFlush();
+  Primitive::renderAll();
 
   /* Triggering motions here */
   glutSwapBuffers();
   glutPostRedisplay();
 
-  DynamicBase::updateAll();
   KeyboardListener::applyKeyEventsOnAll();
+  DynamicBase::updateAll();
 }
 
 int main(int argc, char **argv)
 {
-  Camera::instance();
+  auto s = Sphere(Vector(10, 0, 0), 1, 5, 50);
+  auto s2 = Sphere(Vector(-10, 0, 0), 1, 5, 50);
   auto& launcher = Launcher::instance(argc, argv);
   launcher.launch();
   return 0;

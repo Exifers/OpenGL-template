@@ -25,6 +25,7 @@ class Vector
     Vector operator/(float k) const;
     Vector operator/=(float k);
     float& operator[](int index);
+    const float& operator[](int index) const;
 
     friend std::ostream& operator<<(std::ostream& os, const Vector& v);
     friend Vector operator*(float k, Vector v);

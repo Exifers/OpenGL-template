@@ -11,6 +11,8 @@ class Camera : public Controllable
     static Camera instance();
     void update() override;
 
+    void moveFrame() const;
+
     friend std::ostream& operator<<(std::ostream& ostr, Camera c);
   private:
     Camera() = default;

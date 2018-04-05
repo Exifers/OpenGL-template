@@ -38,7 +38,7 @@ class DynamicBase
     void acc_set(Vector acc);
   protected:
     float mass_ = 1;
-    float intr_friction_ = 0.9;
+    float intr_friction_ = 0.2;
     Vector pos_;
     Vector vel_;
     Vector acc_;

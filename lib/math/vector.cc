@@ -125,3 +125,19 @@ Vector::operator[](int index)
       throw std::invalid_argument("vector index out of range");
   }
 }
+
+const float&
+Vector::operator[](int index) const
+{
+  switch(index)
+  {
+    case 0:
+      return x_;
+    case 1:
+      return y_;
+    case 2:
+      return z_;
+    default:
+      throw std::invalid_argument("vector index out of range");
+  }
+}

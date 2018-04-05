@@ -27,3 +27,23 @@ void specialKeyReleased(int key, int x, int y)
   x = x;
   y = y;
 }
+
+void mouseEvent(int button, int state, int x, int y)
+{
+  button = button;
+  state = state;
+  x = x;
+  y = y;
+}
+
+void mouseMotion(int x, int y)
+{
+  x = x;
+  y = y;
+}
+
+void mousePassiveMotion(int x, int y)
+{
+  x = x;
+  y = y;
+}

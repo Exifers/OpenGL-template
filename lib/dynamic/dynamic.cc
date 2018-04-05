@@ -48,25 +48,25 @@ Controllable::keyPressed(int key)
   switch(key)
   {
     case KEY_UP:
-      dir_ += Vector(1, 0, 0);
-      break;
-    case KEY_DOWN:
-      dir_ += Vector(-1, 0, 0);
-      break;
-    case KEY_LEFT:
-      dir_ += Vector(0, -1, 0);
-      break;
-    case KEY_RIGHT:
-      dir_ += Vector(0, 1, 0);
-      break;
-    case ' ':
       dir_ += Vector(0, 0, 1);
       break;
-    case KEY_SHIFT:
+    case KEY_DOWN:
       dir_ += Vector(0, 0, -1);
       break;
+    case KEY_LEFT:
+      dir_ += Vector(1, 0, 0);
+      break;
+    case KEY_RIGHT:
+      dir_ += Vector(-1, 0, 0);
+      break;
+    case ' ':
+      dir_ += Vector(0, -1, 0);
+      break;
+    case KEY_SHIFT:
+      dir_ += Vector(0, 1, 0);
+      break;
   }
-  apply_force(dir_.normalized());
+  apply_force(dir_.normalized() / 5);
 }
 
 void
@@ -75,25 +75,25 @@ Controllable::keyReleased(int key)
   switch(key)
   {
     case KEY_UP:
-      dir_ -= Vector(1, 0, 0);
-      break;
-    case KEY_DOWN:
-      dir_ -= Vector(-1, 0, 0);
-      break;
-    case KEY_LEFT:
-      dir_ -= Vector(0, -1, 0);
-      break;
-    case KEY_RIGHT:
-      dir_ -= Vector(0, 1, 0);
-      break;
-    case ' ':
       dir_ -= Vector(0, 0, 1);
       break;
-    case KEY_SHIFT:
+    case KEY_DOWN:
       dir_ -= Vector(0, 0, -1);
       break;
+    case KEY_LEFT:
+      dir_ -= Vector(1, 0, 0);
+      break;
+    case KEY_RIGHT:
+      dir_ -= Vector(-1, 0, 0);
+      break;
+    case ' ':
+      dir_ -= Vector(0, -1, 0);
+      break;
+    case KEY_SHIFT:
+      dir_ -= Vector(0, 1, 0);
+      break;
   }
-  apply_force(dir_.normalized());
+  apply_force(dir_.normalized() / 5);
 }
 
 Controllable::~Controllable()

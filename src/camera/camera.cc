@@ -1,5 +1,7 @@
 #include <iostream>
 
+#include <GL/glew.h>
+
 #include "camera.hh"
 
 Camera
@@ -13,7 +15,12 @@ void
 Camera::update()
 {
   Controllable::update();
-  std::cout << *this << std::endl;
+}
+
+void
+Camera::moveFrame() const
+{
+  glTranslatef(pos_[0], pos_[1], pos_[2]);
 }
 
 std::ostream&

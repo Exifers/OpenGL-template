@@ -42,6 +42,9 @@ Launcher::set_handlers()
   glutKeyboardUpFunc(keyReleased);
   glutSpecialFunc(specialKeyPressed);
   glutSpecialUpFunc(specialKeyReleased);
+  glutMouseFunc(mouseEvent);
+  glutMotionFunc(mouseMotion);
+  glutPassiveMotionFunc(mousePassiveMotion);
 }
 
 void
