@@ -3,6 +3,7 @@
 #include <GL/glut.h>
 
 #include <keyboard/keyboard.hh>
+#include <mouse/mouse.hh>
 
 #define KEY_F1        N_KEY / 2 + GLUT_KEY_F1
 #define KEY_F2        N_KEY / 2 + GLUT_KEY_F2

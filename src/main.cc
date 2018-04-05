@@ -9,6 +9,7 @@
 #include <glutInterface/glutInterface.hh>
 #include <camera/camera.hh>
 #include <primitive/primitive.hh>
+#include <mouse/mouse.hh>
 
 void display(void)
 {
@@ -33,8 +34,26 @@ void display(void)
   glutPostRedisplay();
 
   KeyboardListener::applyKeyEventsOnAll();
+  MouseListener::applyMouseEventOnAll();
   DynamicBase::updateAll();
 }
+
+class A : public MouseListener
+{
+  public:
+  void mousePressed(int button, int x, int y) override
+  {
+    std::cout << "MP : " << x << " " << y << " " << button << std::endl;
+  }
+  void mouseReleased(int button, int x, int y) override
+  {
+    std::cout << "MR : " << x << " " << y << " " << button << std::endl;
+  }
+  void mouseMoved(int x, int y) override
+  {
+    std::cout << "MM : " << x << " " << y << std::endl;
+  }
+};
 
 int main(int argc, char **argv)
 {

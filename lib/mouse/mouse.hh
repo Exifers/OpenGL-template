@@ -4,25 +4,30 @@
 #include <list>
 #include <vector>
 
-#define MOUSE_NB_BUTTON     3
+#define MOUSE_NB_BUTTON      3
 
-#define MOUSE_NO_BUTTON    -1
-#define MOUSE_RIGHT_BUTTON  0
-#define MOUSE_MIDDLE_BUTTON 1
-#define MOUSE_LEFT_BUTT0N   2
+#define MOUSE_BUTTON_NONE   -1
+#define MOUSE_BUTTON_LEFT    0
+#define MOUSE_BUTTON_MIDDLE  1
+#define MOUSE_BUTTON_RIGHT   2
+
+#define MOUSE_B_NF -1
+#define MOUSE_X_NF -1
+#define MOUSE_Y_NF -1
 
 extern bool mouseState[];
+extern std::pair<int, int> mousePos;
 
 class MouseListener
 {
   public:
-    static void applyMouseEventOnAll(void);
+    static void applyMouseEventOnAll();
   protected:
     MouseListener();
     ~MouseListener();
-    virtual void MousePressed(int x, int y) = 0;
-    virtual void MouseReleased(int x, int y) = 0;
-    virtual void MouseMoved(int x, int y) = 0;
+    virtual void mousePressed(int button, int x, int y) = 0;
+    virtual void mouseReleased(int button, int x, int y) = 0;
+    virtual void mouseMoved(int x, int y) = 0;
   private:
     static std::list<MouseListener *> instances_;
     static void applyMousePressedOnAll();
@@ -30,18 +35,26 @@ class MouseListener
     static void applyMouseMovedOnAll();
 };
 
+class MouseEventqQueue;
+
 struct mouseEvent
 {
   int x;
   int y;
-  char button;
+  int button;
+  bool isNotFound()
+  {
+    return x      == MOUSE_X_NF
+        && y      == MOUSE_Y_NF
+        && button == MOUSE_B_NF;
+  }
 };
 
 class MouseEventQueue
 {
   protected:
     using mouseEvent_t = struct mouseEvent;
-    using mouseEventQueue_t = std::vector<mouseEvent_t>;
+    using mouseEventQueue_t = std::list<mouseEvent_t>;
   public:
     virtual ~MouseEventQueue() = 0;
 
@@ -49,7 +62,9 @@ class MouseEventQueue
   mouseEvent_t pop();
 
   /// Returned by pick and pop if the stack is empty.
-  static const constexpr mouseEvent_t notFound = {-1, -1, MOUSE_NO_BUTTON};
+  static const constexpr mouseEvent_t notFound = {MOUSE_X_NF,
+                                                  MOUSE_Y_NF,
+                                                  MOUSE_B_NF};
 
   friend std::ostream& operator<<(std::ostream& ostr, MouseEventQueue& q);
 
@@ -66,7 +81,7 @@ class MousePressedQueue : public MouseEventQueue
   static MousePressedQueue& instance();
 
   /// Function to be called by the API
-  static void MousePressed(int x, int y, char button);
+  static void mousePressed(int x, int y, int button);
 
   protected:
   MousePressedQueue() = default;
@@ -78,7 +93,7 @@ class MouseReleasedQueue : public MouseEventQueue
   static MouseReleasedQueue& instance();
 
   /// Function to be called by the API
-  static void MouseReleased(int x, int y, char button);
+  static void mouseReleased(int x, int y, int button);
 
   protected:
   MouseReleasedQueue() = default;
@@ -90,7 +105,7 @@ class MouseMovedQueue : public MouseEventQueue
   static MouseMovedQueue& instance();
 
   /// Function to be called by the API
-  static void MouseMoved(int x, int y);
+  static void mouseMoved(int x, int y);
 
   protected:
   MouseMovedQueue() = default;
