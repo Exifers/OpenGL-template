@@ -43,3 +43,14 @@ class Sphere : public Primitive
     int slices_ = 50;
     int stacks_ = 50;
 };
+
+class Cube : public Primitive
+{
+  public:
+    Cube() = default;
+    Cube(float c);
+
+    void renderingWrapper() override;
+  protected:
+    float c_;
+};

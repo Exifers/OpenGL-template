@@ -22,11 +22,10 @@ void display(void)
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
 
-  Camera::instance().moveFrame();
-
   int lightPos[] = {0, -3, -3, 1};
   glLightiv(GL_LIGHT0, GL_POSITION, lightPos);
 
+  Camera::instance().moveFrame();
   Primitive::renderAll();
 
   /* Triggering motions here */

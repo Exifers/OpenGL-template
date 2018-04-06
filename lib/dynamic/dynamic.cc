@@ -86,7 +86,6 @@ Controllable::keyReleased(int key)
 void
 Controllable::update()
 {
-  std::cout << "EXEC" << std::endl;
   DynamicRotative::update();
   dir_ = Vector();
   if (keyStates[KEY_UP])
