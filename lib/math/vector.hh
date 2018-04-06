@@ -18,6 +18,7 @@ class Vector
     Vector operator+=(Vector other);
     Vector operator-(Vector other) const;
     Vector operator-=(Vector other);
+    Vector operator-() const;
     Vector operator*(float k) const;
     Vector operator*=(float k);
     Vector operator*(Vector other) const;

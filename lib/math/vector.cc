@@ -61,6 +61,11 @@ Vector Vector::operator-=(Vector other)
   return *this;
 }
 
+Vector Vector::operator-() const
+{
+  return Vector() - *this;
+}
+
 Vector Vector::operator*(float k) const
 {
   return Vector(x_ * k, y_ * k, z_ * k);

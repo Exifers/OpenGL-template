@@ -38,27 +38,13 @@ void display(void)
   DynamicBase::updateAll();
 }
 
-class A : public MouseListener
-{
-  public:
-  void mousePressed(int button, int x, int y) override
-  {
-    std::cout << "MP : " << x << " " << y << " " << button << std::endl;
-  }
-  void mouseReleased(int button, int x, int y) override
-  {
-    std::cout << "MR : " << x << " " << y << " " << button << std::endl;
-  }
-  void mouseMoved(int x, int y) override
-  {
-    std::cout << "MM : " << x << " " << y << std::endl;
-  }
-};
-
 int main(int argc, char **argv)
 {
   auto s = Sphere(Vector(10, 0, 0), 1, 5, 50);
-  auto s2 = Sphere(Vector(-10, 0, 0), 1, 5, 50);
+  auto s2 = Sphere(Vector(-10, 0, 0), 2, 5, 50);
+
+  std::cout << Camera::instance() << std::endl;
+
   auto& launcher = Launcher::instance(argc, argv);
   launcher.launch();
   return 0;

@@ -4,6 +4,7 @@
 #include <launcher/handlers.hh>
 #include <error/error.hh>
 #include <glutInterface/glutInterface.hh>
+#include <mouse/mouse.hh>
 
 Launcher::Launcher(int argc, char **argv)
 {
@@ -19,7 +20,8 @@ Launcher::init_window(int argc, char **argv)
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
   glutCreateWindow("Araktazia");
-  //glutFullScreen();
+  glutFullScreen();
+  glutSetCursor(GLUT_CURSOR_NONE);
   glutSetKeyRepeat(GLUT_KEY_REPEAT_OFF);
 }
 

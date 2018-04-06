@@ -1,3 +1,6 @@
+#include <math.h>
+#include <math/utils.hh>
+
 #include "dynamic.hh"
 
 std::list<DynamicBase *> DynamicBase::instances_;
@@ -39,60 +42,65 @@ void DynamicRotative::update()
   angularPos_ += angularVel_;
 }
 
+Vector
+DynamicRotative::direction() const
+{
+  return groundDirection() * cos(toRadians(angularPos_[0]))
+       - upwards()         * sin(toRadians(angularPos_[0]));
+}
+
+Vector
+DynamicRotative::groundDirection() const
+{
+  return groundDirectionNormalized() * cos(toRadians(angularPos_[0]));
+}
+
+Vector
+DynamicRotative::groundDirectionNormalized() const
+{
+  return Vector(0, 0, 1) * cos(toRadians(angularPos_[1]))
+       - Vector(1, 0, 0) * sin(toRadians(angularPos_[1]));
+}
+
+Vector
+DynamicRotative::upwards() const
+{
+  return Vector(0, -1, 0);
+}
+
 DynamicRotative::~DynamicRotative()
 {}
 
 void
 Controllable::keyPressed(int key)
 {
-  switch(key)
-  {
-    case KEY_UP:
-      dir_ += Vector(0, 0, 1);
-      break;
-    case KEY_DOWN:
-      dir_ += Vector(0, 0, -1);
-      break;
-    case KEY_LEFT:
-      dir_ += Vector(1, 0, 0);
-      break;
-    case KEY_RIGHT:
-      dir_ += Vector(-1, 0, 0);
-      break;
-    case ' ':
-      dir_ += Vector(0, -1, 0);
-      break;
-    case KEY_SHIFT:
-      dir_ += Vector(0, 1, 0);
-      break;
-  }
-  apply_force(dir_.normalized() / 5);
+  key = key;
 }
 
 void
 Controllable::keyReleased(int key)
 {
-  switch(key)
-  {
-    case KEY_UP:
-      dir_ -= Vector(0, 0, 1);
-      break;
-    case KEY_DOWN:
-      dir_ -= Vector(0, 0, -1);
-      break;
-    case KEY_LEFT:
-      dir_ -= Vector(1, 0, 0);
-      break;
-    case KEY_RIGHT:
-      dir_ -= Vector(-1, 0, 0);
-      break;
-    case ' ':
-      dir_ -= Vector(0, -1, 0);
-      break;
-    case KEY_SHIFT:
-      dir_ -= Vector(0, 1, 0);
-      break;
-  }
+  key = key;
+}
+
+void
+Controllable::update()
+{
+  std::cout << "EXEC" << std::endl;
+  DynamicRotative::update();
+  dir_ = Vector();
+  if (keyStates[KEY_UP])
+    dir_ += (groundDirection() / 5);
+  if (keyStates[KEY_DOWN])
+    dir_ += (-groundDirection() / 5);
+  if (keyStates[KEY_LEFT])
+    dir_ += ((direction().cross(upwards())).normalized() / 5);
+  if (keyStates[KEY_RIGHT])
+    dir_ += ((-direction().cross(upwards())).normalized() / 5);
+  if (keyStates[' '])
+    dir_ += (upwards() / 5);
+  if (keyStates[KEY_SHIFT])
+    dir_ += (-upwards() / 5);
   apply_force(dir_.normalized() / 5);
 }
 

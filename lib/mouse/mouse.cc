@@ -1,9 +1,12 @@
+#include <GL/glut.h>
+
 #include "mouse.hh"
 
 bool mouseState[MOUSE_NB_BUTTON] = {false};
-std::pair<int, int> mousePos = std::pair<int, int>(0, 0);
+std::pair<int, int> mousePos = std::pair<int, int>(-1, -1);
 
 std::list<MouseListener *> MouseListener::instances_;
+bool MouseMovedQueue::wrapping = false;
 
 MouseListener::MouseListener()
 {
@@ -29,7 +32,6 @@ MouseListener::applyMousePressedOnAll()
   auto mpEvent = MousePressedQueue::instance().pop();
   if (mpEvent.isNotFound())
     return;
-  mouseState[mpEvent.button] = true;
   for (auto it = instances_.begin(); it != instances_.end(); it++)
   {
     (*it)->mousePressed(mpEvent.button, mpEvent.x, mpEvent.y);
@@ -42,7 +44,6 @@ MouseListener::applyMouseReleasedOnAll()
   auto mrEvent = MouseReleasedQueue::instance().pop();
   if (mrEvent.isNotFound())
     return;
-  mouseState[mrEvent.button] = false;
   for (auto it = instances_.begin(); it != instances_.end(); it++)
   {
     (*it)->mouseReleased(mrEvent.button, mrEvent.x, mrEvent.y);
@@ -55,8 +56,6 @@ MouseListener::applyMouseMovedOnAll()
   auto mvEvent = MouseMovedQueue::instance().pop();
   if (mvEvent.isNotFound())
     return;
-  mousePos.first  = mvEvent.x;
-  mousePos.second = mvEvent.y;
   for (auto it = instances_.begin(); it != instances_.end(); it++)
   {
     (*it)->mouseMoved(mvEvent.x, mvEvent.y);
@@ -111,19 +110,34 @@ MouseMovedQueue::instance()
 void
 MousePressedQueue::mousePressed(int x, int y, int button)
 {
+  mouseState[button] = true;
   instance().push({x, y, button});
 }
 
 void
 MouseReleasedQueue::mouseReleased(int x, int y, int button)
 {
+  mouseState[button] = false;
   instance().push({x, y, button});
 }
 
 void
 MouseMovedQueue::mouseMoved(int x, int y)
 {
+  if (wrapping)
+  {
+    if (x != glutGet(GLUT_WINDOW_WIDTH) / 2)
+      return;
+    else
+      wrapping = false;
+  }
+  mousePos.first  = x;
+  mousePos.second = y;
+  // We don't do any mouseMoved event queue there
+  /*
   instance().push({x, y, MOUSE_BUTTON_NONE});
+  MouseListener::applyMouseEventOnAll();
+  */
 }
 
 MouseEventQueue::~MouseEventQueue()

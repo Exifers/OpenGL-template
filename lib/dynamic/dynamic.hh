@@ -7,6 +7,9 @@
 #include <keyboard/keyboard.hh>
 #include <glutInterface/glutInterface.hh>
 
+#define QUARTER_ANGLE 90
+#define HALF_ANGLE 180
+
 class DynamicBase
 {
   public:
@@ -54,6 +57,11 @@ class DynamicRotative : public DynamicBase
 
     virtual void update() override;
 
+    Vector direction() const;
+    Vector groundDirection() const;
+    Vector groundDirectionNormalized() const;
+    Vector upwards() const;
+
     Vector& angularPos_get();
     const Vector& angularPos_get() const;
 
@@ -82,9 +90,11 @@ class Controllable : public KeyboardListener, public DynamicRotative
   public:
     virtual ~Controllable() = 0;
 
+    virtual void update() override;
+
     void keyPressed(int key) override;
     void keyReleased(int key) override;
-  protected:
+  private:
     Vector dir_;
 };
 

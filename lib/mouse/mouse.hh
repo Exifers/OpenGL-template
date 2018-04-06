@@ -2,7 +2,6 @@
 
 #include <ostream>
 #include <list>
-#include <vector>
 
 #define MOUSE_NB_BUTTON      3
 
@@ -34,8 +33,6 @@ class MouseListener
     static void applyMouseReleasedOnAll();
     static void applyMouseMovedOnAll();
 };
-
-class MouseEventqQueue;
 
 struct mouseEvent
 {
@@ -106,6 +103,7 @@ class MouseMovedQueue : public MouseEventQueue
 
   /// Function to be called by the API
   static void mouseMoved(int x, int y);
+  static bool wrapping;
 
   protected:
   MouseMovedQueue() = default;
