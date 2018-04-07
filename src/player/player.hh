@@ -1,6 +1,6 @@
 #pragma once
 
-#include <dynamic/dynamic.hh>
+#include <object/dynamicRotative.hh>
 #include <math/vector.hh>
 
 class Player : public DynamicRotative

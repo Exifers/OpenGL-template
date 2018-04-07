@@ -2,6 +2,7 @@
 #include <cmath>
 
 #include "vector.hh"
+#include "utils.hh"
 
 Vector::Vector(float x, float y, float z)
   :  x_(x), y_(y), z_(z)
@@ -33,6 +34,25 @@ Vector Vector::normalized() const
   if (s == 0)
     return ret;
   return ret / s;
+}
+
+Vector Vector::rotate(float angle, Vector orth)
+{
+  orth = orth.normalized();
+  if (orth.size() == 0)
+    throw std::invalid_argument("Cannot rotate vector around null axis");
+
+  orth[2] *= -1;
+  (*this)[2] *= -1;
+
+  auto rotated = *this * cos(toRadians(angle))
+       + orth * (1 - cos(toRadians(angle))) * (this->dot(orth))
+       + orth.cross(*this) * sin(toRadians(angle));
+  *this = rotated;
+
+  (*this)[2] *= -1;
+
+  return *this;
 }
 
 Vector Vector::operator+(Vector other) const

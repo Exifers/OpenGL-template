@@ -1,8 +1,9 @@
+#pragma once
 #include <ostream>
 
 #include <keyboard/keyboard.hh>
 #include <math/vector.hh>
-#include <dynamic/dynamic.hh>
+#include <object/controllable.hh>
 #include <glutInterface/glutInterface.hh>
 #include <mouse/mouse.hh>
 

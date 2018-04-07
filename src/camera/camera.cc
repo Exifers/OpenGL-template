@@ -1,7 +1,8 @@
 #include <iostream>
-
 #include <GL/glew.h>
 #include <GL/glut.h>
+
+#include <math/utils.hh>
 
 #include "camera.hh"
 
@@ -78,10 +79,10 @@ Camera::centerCursor()
 void
 Camera::moveFrame() const
 {
-  glRotatef(angularPos_[0], 1, 0, 0);
+  glRotatef(-angularPos_[0], 1, 0, 0);
   glRotatef(angularPos_[1], 0, 1, 0);
   glRotatef(angularPos_[2], 0, 0, 1);
-  glTranslatef(pos_[0], pos_[1], pos_[2]);
+  glTranslatef(-pos_[0], -pos_[1], -pos_[2]);
 }
 
 void
@@ -93,7 +94,7 @@ Camera::orientate(int x, int y, int width, int height)
   float ry = (y - hh) / hh;
   localAngle_ = rx * HALF_ANGLE;
   angularPos_[1] = bufferAngle_ + localAngle_;
-  angularPos_[0] = ry * QUARTER_ANGLE;
+  angularPos_[0] = -ry * QUARTER_ANGLE;
 }
 
 

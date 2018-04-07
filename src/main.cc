@@ -25,24 +25,28 @@ void display(void)
   int lightPos[] = {0, -3, -3, 1};
   glLightiv(GL_LIGHT0, GL_POSITION, lightPos);
 
-  Camera::instance().moveFrame();
-  Primitive::renderAll();
-
-  /* Triggering motions here */
-  glutSwapBuffers();
-  glutPostRedisplay();
-
+  // Applying last events
   KeyboardListener::applyKeyEventsOnAll();
   MouseListener::applyMouseEventOnAll();
+
+  // Updating and rendering
+  // Note: movements are more fluid when stuff are performed in this order:
+  Camera::instance().moveFrame();
   DynamicBase::updateAll();
+  Primitive::renderAll();
+
+  // Triggering motions here
+  glutSwapBuffers();
+  glutPostRedisplay();
 }
 
 int main(int argc, char **argv)
 {
   auto s = Sphere(Vector(10, 0, 0), 1, 5, 50);
   auto s2 = Sphere(Vector(-10, 0, 0), 2, 5, 50);
-
-  std::cout << Camera::instance() << std::endl;
+  auto c = Cube(Vector(5, 0, 0), Vector(0, 0, 0), 1.4);
+  c.angularVel_get() = Vector(0, 0, 0);
+  c.taker_get() = &Camera::instance();
 
   auto& launcher = Launcher::instance(argc, argv);
   launcher.launch();
