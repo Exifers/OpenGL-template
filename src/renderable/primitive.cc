@@ -3,90 +3,19 @@
 
 #include "primitive.hh"
 
-/*-------------
-  | Primitive |
-  -------------*/
-
-std::list<Primitive *> Primitive::instances_;
-
-Primitive::Primitive()
-{
-  instances_.push_back(this);
-}
-
-Primitive::~Primitive()
-{
-  instances_.remove(this);
-}
-
-Primitive::Primitive(Vector pos, Vector angularPos)
-{
-  pos_ = pos;
-  angularPos_ = angularPos;
-  instances_.push_back(this);
-}
-
-Primitive::Primitive(Vector pos)
-{
-  pos_ = pos;
-  instances_.push_back(this);
-}
-
-void
-Primitive::update()
-{
-  DynamicRotative::update();
-  Takable::update();
-}
-
-  void
-Primitive::renderAll()
-{
-  for (auto it = instances_.begin(); it != instances_.end(); it++)
-  {
-    (*it)->render();
-  }
-}
-
-  void
-Primitive::moveFrame()
-{
-  glTranslatef(pos_[0], pos_[1], pos_[2]);
-  glRotatef(angularPos_[0], 1, 0, 0);
-  glRotatef(angularPos_[1], 0, 1, 0);
-  glRotatef(angularPos_[2], 0, 0, 1);
-}
-
-  void
-Primitive::resetFrame()
-{
-  glTranslatef(-pos_[0], -pos_[1], -pos_[2]);
-  glRotatef(-angularPos_[0], 1, 0, 0);
-  glRotatef(-angularPos_[1], 0, 1, 0);
-  glRotatef(-angularPos_[2], 0, 0, 1);
-}
-
-  void
-Primitive::render()
-{
-  moveFrame();
-  renderingWrapper();
-  resetFrame();
-}
-
 /*----------
   | Sphere |
   ----------*/
 
 Sphere::Sphere(Vector pos, Vector rot, float r)
-  : Primitive(pos, rot), r_(r)
+  : Renderable(pos, rot), r_(r)
 {}
 
 Sphere::Sphere(Vector pos, float r, int slices, int stacks)
-  : Primitive(pos), r_(r), slices_(slices), stacks_(stacks)
+  : Renderable(pos), r_(r), slices_(slices), stacks_(stacks)
 {}
 
-  void
+void
 Sphere::renderingWrapper()
 {
   glutSolidSphere(r_, slices_, stacks_);
@@ -98,11 +27,11 @@ Sphere::renderingWrapper()
   --------*/
 
 Cube::Cube(Vector pos, float c)
-  : Primitive(pos), c_(c)
+  : Renderable(pos), c_(c)
 {}
 
 Cube::Cube(Vector pos, Vector rot, float c)
-  : Primitive(pos, rot), c_(c)
+  : Renderable(pos, rot), c_(c)
 {}
 
 Cube::Cube(float c)
@@ -149,9 +78,7 @@ void
 Cube::mousePressed(int button, int x, int y)
 {
   if (button == MOUSE_BUTTON_LEFT)
-  {
     taken_get() = true;
-  }
   Takable::mousePressed(button, x, y);
 }
 
@@ -159,9 +86,7 @@ void
 Cube::mouseReleased(int button, int x, int y)
 {
   if (button == MOUSE_BUTTON_LEFT)
-  {
     taken_get() = false;
-  }
   Takable::mouseReleased(button, x, y);
 }
 
@@ -169,4 +94,49 @@ void
 Cube::mouseMoved(int x, int y)
 {
   Takable::mouseMoved(x, y);
+}
+
+/*---------
+  | Plane |
+  ---------*/
+
+void
+Plane::renderingWrapper()
+{
+  if (dimension_.cross(side_).size() == 0)
+    return;
+
+  glBegin(GL_QUADS);
+
+  glVertex3f(0, 0, 0);
+  auto v = dimension_ - side_;
+  glVertex3f(v.x_get(), v.y_get(), v.z_get());
+  glVertex3f(dimension_.x_get(), dimension_.y_get(), dimension_.z_get());
+  glVertex3f(side_.x_get(), side_.y_get(), side_.z_get());
+
+  glEnd();
+}
+
+Vector&
+Plane::dimension_get()
+{
+  return dimension_;
+}
+
+const Vector&
+Plane::dimension_get() const
+{
+  return dimension_;
+}
+
+Vector&
+Plane::side_get()
+{
+  return side_;
+}
+
+const Vector&
+Plane::side_get() const
+{
+  return side_;
 }

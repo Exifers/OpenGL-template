@@ -1,41 +1,17 @@
 #pragma once
-#include <list>
 
 #include <math/vector.hh>
-#include <object/dynamicRotative.hh>
-#include <object/takable.hh>
 #include <mouse/mouse.hh>
 
-#include <camera/camera.hh>
+#include "renderable.hh"
 
-class Primitive : public virtual DynamicRotative, public virtual Takable
-{
-  public:
-    Primitive();
-    ~Primitive();
-    Primitive(Vector pos, Vector angularPos);
-    Primitive(Vector pos);
-
-    virtual void render();
-
-    virtual void update() override;
-
-    static void renderAll();
-
-    void moveFrame();
-    void resetFrame();
-  private:
-    virtual void renderingWrapper() = 0;
-    static std::list<Primitive *> instances_;
-};
-
-class Sphere : public virtual Primitive
+class Sphere : public virtual Renderable
 {
   public:
     Sphere() = default;
     Sphere(Vector pos, Vector rot, float r);
     Sphere(Vector pos, float r, int slices, int stacks);
-
+  private:
     void renderingWrapper() override;
   protected:
     float r_ = 1;
@@ -43,7 +19,7 @@ class Sphere : public virtual Primitive
     int stacks_ = 50;
 };
 
-class Cube : public virtual Primitive
+class Cube : public virtual Renderable
 {
   public:
     Cube() = default;
@@ -54,8 +30,25 @@ class Cube : public virtual Primitive
     void mousePressed(int button, int x, int y) override;
     void mouseReleased(int button, int x, int y) override;
     void mouseMoved(int x, int y) override;
-
+  private:
     void renderingWrapper() override;
   protected:
     float c_ = 1;
+};
+
+class Plane : public virtual Renderable
+{
+  public:
+    Plane() = default;
+
+    Vector& dimension_get();
+    const Vector& dimension_get() const;
+
+    Vector& side_get();
+    const Vector& side_get() const;
+  private:
+    void renderingWrapper() override;
+  protected:
+    Vector dimension_ = Vector(10, 0, 10);
+    Vector side_ = Vector(10, 0, 0);
 };
